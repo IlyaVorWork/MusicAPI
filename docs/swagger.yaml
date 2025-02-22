@@ -1,0 +1,234 @@
+definitions:
+  music.AddTrackDTO:
+    properties:
+      group:
+        type: string
+      song:
+        type: string
+    type: object
+  music.DeleteTrackDTO:
+    properties:
+      group:
+        type: string
+      song:
+        type: string
+    type: object
+  music.UpdateTrackDTO:
+    properties:
+      group:
+        type: string
+      newLink:
+        type: string
+      newReleaseDate:
+        type: string
+      newText:
+        type: string
+      song:
+        type: string
+    type: object
+  pkg.ErrorRes:
+    properties:
+      error:
+        type: string
+    type: object
+  pkg.InfoRes:
+    properties:
+      info:
+        type: string
+    type: object
+  pkg.Track:
+    properties:
+      group:
+        type: string
+      link:
+        type: string
+      releaseDate:
+        type: string
+      song:
+        type: string
+      text:
+        type: string
+    type: object
+  pkg.TrackTextRes:
+    properties:
+      text:
+        type: string
+    type: object
+  pkg.TracksRes:
+    properties:
+      tracks:
+        items:
+          $ref: '#/definitions/pkg.Track'
+        type: array
+    type: object
+info:
+  contact: {}
+  title: MusicAPI
+  version: "1.0"
+paths:
+  /track/add:
+    post:
+      description: Fetches track's info and adds it into the database
+      parameters:
+      - description: contains group and song name of track to add
+        in: body
+        name: dto
+        required: true
+        schema:
+          $ref: '#/definitions/music.AddTrackDTO'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/pkg.InfoRes'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/pkg.ErrorRes'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/pkg.ErrorRes'
+      tags:
+      - Track
+  /track/delete:
+    delete:
+      description: Deletes a track from the database by provided group and song name
+      parameters:
+      - description: contains group and song name of track to delete
+        in: body
+        name: dto
+        required: true
+        schema:
+          $ref: '#/definitions/music.DeleteTrackDTO'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/pkg.InfoRes'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/pkg.ErrorRes'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/pkg.ErrorRes'
+      tags:
+      - Track
+  /track/text:
+    get:
+      description: Returns a track's text paginated by 1 verse per page by default
+      parameters:
+      - description: filter for 'group' field
+        in: query
+        name: group
+        required: true
+        type: string
+      - description: filter for 'song' field
+        in: query
+        name: song
+        required: true
+        type: string
+      - description: page number
+        in: query
+        name: page
+        type: integer
+      - description: number of verses per page
+        in: query
+        name: verseCount
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/pkg.TrackTextRes'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/pkg.ErrorRes'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/pkg.ErrorRes'
+      tags:
+      - Track
+  /track/update:
+    post:
+      description: Updates a track's info in the database
+      parameters:
+      - description: contains group and song name and info fields to update
+        in: body
+        name: dto
+        required: true
+        schema:
+          $ref: '#/definitions/music.UpdateTrackDTO'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/pkg.InfoRes'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/pkg.ErrorRes'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/pkg.ErrorRes'
+      tags:
+      - Track
+  /tracks:
+    get:
+      description: Returns a list of tracks paginated by 10 items per page by default
+      parameters:
+      - description: filter for 'group' field
+        in: query
+        name: group
+        type: string
+      - description: filter for 'song' field
+        in: query
+        name: song
+        type: string
+      - description: filter for 'date' field
+        in: query
+        name: date
+        type: string
+      - description: filter for 'text' field
+        in: query
+        name: text
+        type: string
+      - description: filter for 'link' field
+        in: query
+        name: link
+        type: string
+      - description: page number
+        in: query
+        name: page
+        type: integer
+      - description: number of items per page
+        in: query
+        name: size
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/pkg.TracksRes'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/pkg.ErrorRes'
+      tags:
+      - Track
+swagger: "2.0"
